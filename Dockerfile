@@ -46,9 +46,9 @@ RUN chown -R nextjs:nodejs /app
 USER nextjs
 
 # Expor porta padrão do Next.js
-EXPOSE 3000
+EXPOSE 3001
 
-ENV PORT=3000
+ENV PORT=3001
 ENV HOSTNAME="0.0.0.0"
 
 # Comando para iniciar a aplicação
