@@ -4,29 +4,33 @@ import { statusProvaSchema } from '@/lib/schemas';
 /**
  * GET /api/prova/status
  * Retorna o status da prova: quando será liberada e tempo restante
+ * Busca os dados de http://localhost:3000/avaliacao
  */
 export async function GET() {
   try {
     // Horário do servidor (sempre usar isso como referência)
-    const horaServidor = new Date().toISOString();
+    const horaServidor = new Date();
 
-    // TODO: Substituir por lógica real de configuração da prova
-    // Exemplo: prova liberada em 14:00 do dia atual
-    const hoje = new Date();
-    const liberadaEm = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), 14, 0, 0);
+    // Buscar dados da avaliação
+    const avaliacaoResponse = await fetch('http://localhost:3000/avaliacao');
     
-    // Se já passou, libera imediatamente (para testes)
-    if (liberadaEm < hoje) {
-      liberadaEm.setDate(liberadaEm.getDate() + 1);
+    if (!avaliacaoResponse.ok) {
+      throw new Error(`Erro ao buscar avaliação: ${avaliacaoResponse.status}`);
     }
 
-    const tempoRestanteMs = liberadaEm.getTime() - hoje.getTime();
+    const avaliacaoData = await avaliacaoResponse.json();
+    
+    // Extrair data de liberação
+    const liberadaEm = new Date(avaliacaoData.liberadaEm || avaliacaoData.dataLiberacao);
+    
+    // Calcular tempo restante
+    const tempoRestanteMs = liberadaEm.getTime() - horaServidor.getTime();
     const tempoRestanteSegundos = Math.max(0, Math.floor(tempoRestanteMs / 1000));
 
     const response = {
       liberadaEm: liberadaEm.toISOString(),
       tempoRestanteSegundos,
-      horaServidor,
+      horaServidor: horaServidor.toISOString(),
     };
 
     // Validar resposta

@@ -81,21 +81,55 @@ export function ResultadoCard({ resultado }: ResultadoCardProps) {
 
       {/* Detalhes colapsáveis */}
       {mostrarDetalhes && (
-        <div className="mt-4 space-y-2 rounded-lg border border-neutral-200 bg-neutral-50 p-4">
+        <div className="mt-4 space-y-3 rounded-lg border border-neutral-200 bg-neutral-50 p-4">
           <p className="mb-3 text-sm font-medium text-neutral-900">Resultado por questão:</p>
-          <div className="grid grid-cols-5 gap-2 sm:grid-cols-10">
+          <div className="space-y-2">
             {resultado.detalhes.map((detalhe) => (
               <div
                 key={detalhe.questao}
                 className={cn(
-                  'flex h-10 w-10 items-center justify-center rounded-lg text-xs font-semibold',
+                  'flex items-center justify-between rounded-lg border p-3 text-sm',
                   detalhe.correta
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-red-100 text-red-700'
+                    ? 'border-green-200 bg-green-50'
+                    : 'border-red-200 bg-red-50'
                 )}
-                title={`Questão ${detalhe.questao}: ${detalhe.correta ? 'Correta' : 'Incorreta'}`}
               >
-                {detalhe.questao}
+                <div className="flex items-center gap-3">
+                  <span className="font-semibold text-neutral-900">
+                    Questão {detalhe.questao}
+                  </span>
+                  <span
+                    className={cn(
+                      'rounded px-2 py-0.5 text-xs font-medium',
+                      detalhe.correta
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-red-100 text-red-700'
+                    )}
+                  >
+                    {detalhe.correta ? '✓ Correta' : '✗ Incorreta'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-4 text-xs">
+                  <div className="text-right">
+                    <span className="text-neutral-600">Sua resposta: </span>
+                    <span
+                      className={cn(
+                        'font-semibold uppercase',
+                        detalhe.correta ? 'text-green-700' : 'text-red-700'
+                      )}
+                    >
+                      {detalhe.respostaSelecionada}
+                    </span>
+                  </div>
+                  {!detalhe.correta && (
+                    <div className="text-right">
+                      <span className="text-neutral-600">Correta: </span>
+                      <span className="font-semibold uppercase text-green-700">
+                        {detalhe.respostaCorreta}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>

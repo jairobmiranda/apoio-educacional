@@ -8,8 +8,8 @@ import { questoesResponseSchema } from '@/lib/schemas';
 export async function GET() {
   try {
     // TODO: Substituir por lógica real de busca de questões do banco de dados
-    // Mock: 20 questões
-    const questoes = Array.from({ length: 20 }, (_, i) => ({
+    // Mock: 41 questões
+    const questoes = Array.from({ length: 41 }, (_, i) => ({
       numero: String(i + 1).padStart(2, '0'),
     }));
 

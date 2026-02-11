@@ -13,14 +13,26 @@ export async function POST(request: Request) {
     // Validar dados recebidos
     const validated = provaEnvioSchema.parse(body);
 
-    // TODO: Substituir por lógica real de correção
-    // Mock: gabarito fixo para demonstração
-    const gabarito: Record<string, string> = {
-      '01': 'a', '02': 'b', '03': 'c', '04': 'd', '05': 'e',
-      '06': 'a', '07': 'b', '08': 'c', '09': 'd', '10': 'e',
-      '11': 'a', '12': 'b', '13': 'c', '14': 'd', '15': 'e',
-      '16': 'a', '17': 'b', '18': 'c', '19': 'd', '20': 'e',
-    };
+    // Buscar gabarito da API externa
+    const gabaritoUrl = 'https://mockapi.jbmiranda.vps-kinghost.net/prova-senai-1';
+    const gabaritoResponse = await fetch(gabaritoUrl);
+    
+    if (!gabaritoResponse.ok) {
+      throw new Error('Erro ao buscar gabarito da API');
+    }
+
+    const gabaritoData: Array<{
+      body: {
+        questao: string;
+        resposta: string;
+      };
+    }> = await gabaritoResponse.json();
+
+    // Construir gabarito a partir da resposta da API
+    const gabarito: Record<string, string> = {};
+    gabaritoData.forEach((item) => {
+      gabarito[item.body.questao] = item.body.resposta.toLowerCase();
+    });
 
     // Corrigir prova
     const detalhes = validated.respostas.map((resposta) => {
@@ -50,6 +62,36 @@ export async function POST(request: Request) {
     const validatedResult = resultadoProvaSchema.parse(resultado);
 
     // TODO: Salvar resultado no banco de dados
+
+    // Enviar resultado para webhook
+    try {
+      const webhookUrl = 'https://webhook.site/5401bc0a-35ce-4ba4-b534-78d64b82b52b';
+      
+      const webhookPayload = {
+        aluno: validatedResult.aluno,
+        dataRegistro: validatedResult.dataRegistro,
+        notaFinal: validatedResult.notaFinal,
+        totalQuestoes: validatedResult.totalQuestoes,
+        alternativasMarcadas: validatedResult.detalhes.map(d => ({
+          questao: d.questao,
+          alternativaMarcada: d.respostaSelecionada,
+          respostaCorreta: d.respostaCorreta,
+          correta: d.correta,
+          notaObtida: d.notaObtida,
+        })),
+      };
+
+      await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(webhookPayload),
+      });
+    } catch (webhookError) {
+      // Log do erro mas não interrompe o fluxo
+      console.error('Erro ao enviar para webhook:', webhookError);
+    }
 
     return NextResponse.json(validatedResult);
   } catch (error) {
