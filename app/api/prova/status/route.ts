@@ -4,7 +4,7 @@ import { statusProvaSchema } from '@/lib/schemas';
 /**
  * GET /api/prova/status
  * Retorna o status da prova: quando será liberada e tempo restante
- * Busca os dados de https://sisnet-api.jbmiranda.ddns.net/avaliacao
+ * Busca os dados de https://api.intelive.me/avaliacao
  */
 export async function GET() {
   try {
@@ -12,7 +12,7 @@ export async function GET() {
     const horaServidor = new Date();
 
     // Buscar dados da avaliação
-    const avaliacaoResponse = await fetch('https://sisnet-api.jbmiranda.ddns.net/avaliacao');
+    const avaliacaoResponse = await fetch('https://api.intelive.me/avaliacao');
     
     if (!avaliacaoResponse.ok) {
       throw new Error(`Erro ao buscar avaliação: ${avaliacaoResponse.status}`);

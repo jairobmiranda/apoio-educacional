@@ -14,7 +14,7 @@ pnpm dev
 bun dev
 ```
 
-Open [https://sisnet-api.jbmiranda.ddns.net](https://sisnet-api.jbmiranda.ddns.net) with your browser to see the result.
+Open [https://api.intelive.me](https://api.intelive.me) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 

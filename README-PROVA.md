@@ -69,7 +69,7 @@ lib/
    ```
 
 4. **Acessar aplicação:**
-   - Abra [https://sisnet-api.jbmiranda.ddns.net](https://sisnet-api.jbmiranda.ddns.net)
+   - Abra [https://api.intelive.me](https://api.intelive.me)
 
 ### Fluxo do Aluno
 
