@@ -69,7 +69,7 @@ lib/
    ```
 
 4. **Acessar aplicação:**
-   - Abra [http://localhost:3000](http://localhost:3000)
+   - Abra [https://api.intelive.me](https://api.intelive.me)
 
 ### Fluxo do Aluno
 
